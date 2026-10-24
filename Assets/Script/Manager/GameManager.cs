@@ -1,0 +1,58 @@
+using UnityEngine;
+
+public enum GameState
+{
+    MainMenuState,
+    GameplayState,
+    GameOverState
+}
+
+
+public class GameManager : MonoBehaviour
+{
+
+    public static GameManager instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+
+    private GameState currentGameState;
+
+
+    //================== Game State Logic =====================================
+    public void SwitchState(GameState newState)
+    {
+        if(currentGameState == newState) return;
+
+        CheckStateTransition(newState);
+
+        currentGameState = newState;
+    }
+
+    private void CheckStateTransition(GameState newState)
+    {
+        switch (newState)
+        {
+            case GameState.MainMenuState:
+
+                MainMenuManager.instance.SetUpMainMenu();
+
+                break;
+
+            case GameState.GameplayState:
+
+                break;
+
+            case GameState.GameOverState:
+                GameOverManager.instance.PlayerGameOver();
+                break;
+        }
+    }
+
+
+}
