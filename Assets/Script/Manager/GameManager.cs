@@ -36,6 +36,9 @@ public class GameManager : MonoBehaviour
 
     private void CheckStateTransition(GameState newState)
     {
+
+        UIManager.instance.CloseAllPanels();
+
         switch (newState)
         {
             case GameState.MainMenuState:
@@ -45,6 +48,8 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.GameplayState:
+
+                GameplayManager.instance.GameStart();
 
                 break;
 

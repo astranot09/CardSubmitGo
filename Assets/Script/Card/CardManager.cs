@@ -12,7 +12,7 @@ public enum CardType
 }
 
 [System.Serializable]
-public class TypeValue
+public class TypeHierarchy
 {
     public CardType cardType;
 }
@@ -50,19 +50,23 @@ public class CardManager : MonoBehaviour
     }
 
     [Header("Type Datas")]
-    [SerializeField] private List<TypeValue> typeOrder;
+    [SerializeField] private List<TypeHierarchy> typeHierarchy = new();
 
     [Header("Sprite Datas")]
-    [SerializeField] private List<CardView> cardSpriteDatas;
+    [SerializeField] private List<CardView> cardSpriteDatas = new();
 
     [Header("Card Datas")]
     private List<CardData> cardDatas = new();
     [SerializeField] private int maxCardValue_EachType = 10;
     [SerializeField] private List<CardData> deckShuffle = new();
 
-    private void Start()
+    private void OnEnable()
     {
-        InitCardDatas();
+        GameplayManager.instance.OnGameStart += InitCardDatas;
+    }
+    private void OnDisable()
+    {
+        GameplayManager.instance.OnGameStart -= InitCardDatas;
     }
 
     // Make the Datas for all card
@@ -74,6 +78,7 @@ public class CardManager : MonoBehaviour
             for (int i = 1; i <= maxCardValue_EachType; i++)
             {
                 cardDatas.Add(new CardData(type, i));
+                //Debug.Log("KartuData");
             }
         }
         DeckShuffle();
@@ -83,14 +88,49 @@ public class CardManager : MonoBehaviour
     // Shuffle the card when start the game
     private void DeckShuffle()
     {
-        int index = cardDatas.Count;
+        deckShuffle.Clear();
 
-        for(int i = 0; i < index; i++)
+        int cardTotal = cardDatas.Count;
+        int index = cardTotal;
+        //Debug.Log($"Total Kartu = {cardTotal}");
+
+
+        for (int i = 0; i < cardTotal; i++)
         {
+            //Debug.Log("KartuShuffle");
+
             int shuffleIndex = UnityEngine.Random.Range(0, index);
             deckShuffle.Add(cardDatas[shuffleIndex]);
             cardDatas.RemoveAt(shuffleIndex);
             index--;
         }
+    }
+
+    public CardData GetCardData()
+    {
+        CardData data = deckShuffle[0];
+        RemoveTopCardFromDeck();
+        return data;
+    }
+
+    private void RemoveTopCardFromDeck()
+    {
+        //Debug.Log("HapusKartu");
+        deckShuffle.RemoveAt(0);
+    } 
+
+
+    public Sprite GetCardSprite(CardType type)
+    {
+        CardView view = cardSpriteDatas.Find(x => x.cardType == type);
+        return view.typeSprite;
+    }
+
+    public bool CheckPlayerTypeHierarchy(CardType playerType, CardType tableType)
+    {
+        int playerHierarchy = typeHierarchy.FindIndex(x => x.cardType == playerType);
+        int enemyHierarchy = typeHierarchy.FindIndex(x => x.cardType == tableType);
+
+        return playerHierarchy < enemyHierarchy; // True berarti lebih besar playernya, False berarti lebih kecil playernya
     }
 }
