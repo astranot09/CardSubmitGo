@@ -108,6 +108,12 @@ public class CardManager : MonoBehaviour
 
     public CardData GetCardData()
     {
+        if(deckShuffle.Count <= 0)
+        {
+            GameManager.instance.SwitchState(GameState.GameOverState);
+            return null;
+        }
+
         CardData data = deckShuffle[0];
         RemoveTopCardFromDeck();
         return data;
