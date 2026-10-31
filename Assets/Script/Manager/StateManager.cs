@@ -8,10 +8,10 @@ public enum GameState
 }
 
 
-public class GameManager : MonoBehaviour
+public class StateManager : MonoBehaviour
 {
 
-    public static GameManager instance;
+    public static StateManager instance;
 
     private void Awake()
     {

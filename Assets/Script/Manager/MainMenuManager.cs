@@ -30,7 +30,7 @@ public class MainMenuManager : MonoBehaviour
     {
         UIManager.instance.ClosePanel(mainMenuPanel);
 
-        GameManager.instance.SwitchState(GameState.GameplayState);
+        StateManager.instance.SwitchState(GameState.GameplayState);
     }
     public void ExitGame()
     {

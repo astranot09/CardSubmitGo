@@ -24,11 +24,11 @@ public class GameOverManager : MonoBehaviour
     public void RestartGame()
     {
         UIManager.instance.ClosePanel(gameOverPanel);
-        GameManager.instance.SwitchState(GameState.GameplayState);
+        StateManager.instance.SwitchState(GameState.GameplayState);
     }
     public void BackToMainMenu()
     {
         UIManager.instance.ClosePanel(gameOverPanel);
-        GameManager.instance.SwitchState(GameState.MainMenuState);
+        StateManager.instance.SwitchState(GameState.MainMenuState);
     }
 }

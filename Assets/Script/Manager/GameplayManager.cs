@@ -173,7 +173,7 @@ public class GameplayManager : MonoBehaviour
     {
         if (currentHealth <= 0)
         {
-            GameManager.instance.SwitchState(GameState.GameOverState);
+            StateManager.instance.SwitchState(GameState.GameOverState);
         }
     }
 

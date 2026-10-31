@@ -110,7 +110,7 @@ public class CardManager : MonoBehaviour
     {
         if(deckShuffle.Count <= 0)
         {
-            GameManager.instance.SwitchState(GameState.GameOverState);
+            StateManager.instance.SwitchState(GameState.GameOverState);
             return null;
         }
 
