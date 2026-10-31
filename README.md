@@ -2,47 +2,45 @@
 
 ## Folder :
 ### Asset
-Untuk menyimpan sprite
+Contains all sprite resources and visual assets.
 
 ### Script
-Untuk menyimpan seluruh scripts
+Contains all project source scripts organized by functional domains.
 
 ## Folder Script :
 
 ### Card
-Terdapat 2 script utama, pertama yang ngurus mekanik kartu dan yang kedua yang mengurus ui kartu di mejanya. <br>
 <img width="428" height="361" alt="image" src="https://github.com/user-attachments/assets/703ea1c1-d33d-4b86-b6f7-c628ea15154c" /><br>
-Card manager bertugas dalam mengatur hierarchy dari sebuah jenis (yang 4 tipe) kartu, mengatur setiap jenis kartunya lambangnya apa, setiap lambang berapa banyak kartu, dan hasil kartu acaknya apa.<br>
+Manages card mechanics, hierarchy, and data for the four card types. Handles card suit assignments, card quantities per suit, and random deck generation logic.<br>
 <img width="431" height="147" alt="image" src="https://github.com/user-attachments/assets/6febcaa4-8252-4546-85c1-a9e1ce31dc90" /><br>
-Card UI Prefab, berguna untuk menerima data kartu yang akan ditampilkan.<br>
+Controls the card representation on the table and renders incoming card data onto the UI.<br>
 
 ### Manager - SceneController
-Untuk mengatur perpindahan Scene (untuk kasus ini, cuman exit game)
+Handles application exit logic.
 
 ### Manager - UIManager
-Untuk mengatur mati nyala dari sebuah panel.
+Toggles visibility and state for canvas panels across the application.
 
-### Manager - GameManager
-Untuk mengatur dari seluruh state yang ada. Untuk ganti state, ngecek state.
+### Manager - StateManager
+Central hub for global game state management (checking current states and handling state transitions).
 
 ### Manager - MainMenuManager
-Untuk mengatur main menu.
+Controls main menu interactions and initial setup.
 
 ### Manager - GameOverManager
-Untuk mengatur tampilan saat game selesai.
+Manages the end-game display and post-game UI interactions.
 
 ### Manager - GamePlayManager
-Untuk mengatur flow dari gamenya. Seperti alur dari awal hingga akhir (lewwat event), nyawa player, score player
+Controls core gameplay execution, managing lifecycle events, player health, and score tracking.
 
 ### Manager - Gameplay - UIGamePlayManager
-Untuk mengatur UI dari gamenya. Seperti tampilan score, nyawa, kartu, game panel.
+Manager that updates in-game UI components (score display, player health, active card instances, and main game panels).
 
 ## Game FLow :
-1. GameState di Game Manager menuju ke Main Menu dimana Main Menu Manager akan setup tampilannya
-2. Kalau StartGame, akan ganti ke gameplay state dimana akan mengtrigger event gameStart (Buat deck dan acak deck, buka panel gameplay) dan reset semua kartu, score, nyawa, dll.
-3. Setelah selesai, bakal trigger event Round Start (musuh akan ambil kartu, dan simpen di meja)
-4. Kemudian, Player disuruh nebak lewat ui yang ditrigger lewat event Player Guess.
-5. Kalau udah milih, bakal nampilin hasilnya dan trigger event conclusion (untuk ngecek hasilnya gimana, menang atau kalah) dan matiin ui milih tebakannya.
-6. Nah kalau salah bakal kena damage dan cek apakah udah lebih kecil atau sama dengan 0 belum. kalau udah bakal ganti state ke gameover.
-7. Selesai round juga akan trigger event Round Finish (buat trigger round start), dimana akan dijalankan dalamnya kalau nyawa player masih > 0.
-8. Pas ambil kartu juga di cek, kalau udah abis, berarti ganti ke gameover.
+1. The StateManager initializes the game in the Main Menu state. MainMenuManager sets up and renders the main menu UI.
+2. Triggering Start Game transitions the state to the Gameplay State. Invokes the OnGameStart event: builds and shuffles the deck, enables the gameplay UI panel, and resets player health, score, and card parameters.
+3. Triggers the OnPlayerGuess event, enabling the player UI selection interface to prompt input.
+4. Upon player selection, the game evaluates and displays the turn outcome. Invokes the OnConclusion event to process win/loss conditions and disable the selection UI.
+5. If the player's guess is incorrect, health points are deducted.The game checks if player health reaches 0; if true, the StateManager transitions directly to the GameOver State.
+6. Triggers the OnRoundFinish event.If player health remains > 0, OnRoundStart is invoked to begin the next turn.
+7. During the card draw phase, the system verifies remaining deck capacity. If no cards remain in the deck, the game immediately transitions to the GameOver State.
